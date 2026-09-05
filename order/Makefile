@@ -13,7 +13,7 @@ fmt:
 	go fmt ./...
 
 lint:
-	golangcli-lint run
+	golangci-lint run
 
 tidy:
 	go mod tidy
