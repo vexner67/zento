@@ -1,11 +1,15 @@
 package main
 
 import (
+	"context"
 	"fmt"
-	"log"
 	"net"
+	"os"
+	"time"
 
+	_ "github.com/jackc/pgx/v5"
 	"github.com/vexner67/zento/order/internal/config"
+	"github.com/vexner67/zento/order/internal/database"
 	"github.com/vexner67/zento/order/internal/logger"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health"
@@ -16,13 +20,26 @@ import (
 func main() {
 	cfg, err := config.Load()
 	if err != nil {
-		log.Fatal(err)
+		fmt.Fprintln(os.Stderr, "failed to load config:", err)
+		os.Exit(1)
 	}
 
 	logger, err := logger.New(cfg)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Fprintln(os.Stderr, "failed to create logger:", err)
+		os.Exit(1)
 	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+
+	db, err := database.NewPostgres(ctx, cfg.DatabaseURL)
+	cancel()
+
+	if err != nil {
+		logger.Error("failed to connect to postgres", "error", err)
+		os.Exit(1)
+	}
+	defer db.Close()
 
 	addr := fmt.Sprintf(":%d", cfg.GRPCPort)
 

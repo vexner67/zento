@@ -8,9 +8,11 @@ import (
 )
 
 type Config struct {
-	GRPCPort  int    `env:"GRPC_PORT" required:"true" default:"50051"`
-	LogLevel  string `env:"LOG_LEVEL" required:"true" default:"info"`
-	LogFormat string `env:"LOG_FORMAT" required:"true" default:"text"`
+	GRPCPort  int    `env:"GRPC_PORT,required"`
+	LogLevel  string `env:"LOG_LEVEL,required"`
+	LogFormat string `env:"LOG_FORMAT,required"`
+
+	DatabaseURL string `env:"DATABASE_URL,required"`
 }
 
 func Load() (Config, error) {
