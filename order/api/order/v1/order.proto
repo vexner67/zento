@@ -68,5 +68,4 @@ message ListOrdersResponse {
 
 message CancelOrderRequest {
   string order_id = 1;
-
 }
