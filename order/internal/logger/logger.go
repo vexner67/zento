@@ -15,7 +15,8 @@ func New(cfg config.Config) (*slog.Logger, error) {
 	}
 
 	opts := &slog.HandlerOptions{
-		Level: level,
+		Level:     level,
+		AddSource: true,
 	}
 
 	var handler slog.Handler
