@@ -3,64 +3,39 @@ package main
 import (
 	"context"
 	"fmt"
-	"net"
 	"os"
-	"time"
+	"os/signal"
+	"syscall"
 
-	_ "github.com/jackc/pgx/v5"
+	"github.com/vexner67/zento/order/internal/app"
 	"github.com/vexner67/zento/order/internal/config"
-	"github.com/vexner67/zento/order/internal/database"
-	"github.com/vexner67/zento/order/internal/logger"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/health"
-	"google.golang.org/grpc/health/grpc_health_v1"
-	"google.golang.org/grpc/reflection"
 )
 
 func main() {
+	if err := run(); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+}
+
+func run() error {
 	cfg, err := config.Load()
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "failed to load config:", err)
-		os.Exit(1)
+		return fmt.Errorf("load config: %w", err)
 	}
 
-	logger, err := logger.New(cfg)
+	ctx, stop := signal.NotifyContext(
+		context.Background(),
+		os.Interrupt,
+		syscall.SIGTERM,
+	)
+	defer stop()
+
+	a, err := app.New(ctx, cfg)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "failed to create logger:", err)
-		os.Exit(1)
+		return err
 	}
+	defer a.Close()
 
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-
-	db, err := database.NewPostgres(ctx, cfg.DatabaseURL)
-	cancel()
-
-	if err != nil {
-		logger.Error("failed to connect to postgres", "error", err)
-		os.Exit(1)
-	}
-	defer db.Close()
-
-	addr := fmt.Sprintf(":%d", cfg.GRPCPort)
-
-	listener, err := net.Listen("tcp", addr)
-	if err != nil {
-		logger.Error("failed to listen", "error", err)
-		return
-	}
-
-	grpcServer := grpc.NewServer()
-
-	healthServer := health.NewServer()
-	grpc_health_v1.RegisterHealthServer(grpcServer, healthServer)
-
-	reflection.Register(grpcServer)
-
-	healthServer.SetServingStatus("", grpc_health_v1.HealthCheckResponse_SERVING)
-
-	logger.Info("starting gRPC server", "address", addr)
-
-	if err = grpcServer.Serve(listener); err != nil {
-		logger.Error("gRPC server stopped", "error", err)
-	}
+	return a.Run(ctx)
 }
