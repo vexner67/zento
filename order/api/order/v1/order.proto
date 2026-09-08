@@ -50,6 +50,7 @@ message CreateOrderRequest {
 message CreateOrderItem {
   string product_id = 1;
   int32 quantity = 2;
+  Money unit_price = 3;
 }
 
 message GetOrderRequest {

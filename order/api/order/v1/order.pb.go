@@ -337,6 +337,7 @@ type CreateOrderItem struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ProductId     string                 `protobuf:"bytes,1,opt,name=product_id,json=productId,proto3" json:"product_id,omitempty"`
 	Quantity      int32                  `protobuf:"varint,2,opt,name=quantity,proto3" json:"quantity,omitempty"`
+	UnitPrice     *Money                 `protobuf:"bytes,3,opt,name=unit_price,json=unitPrice,proto3" json:"unit_price,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -383,6 +384,13 @@ func (x *CreateOrderItem) GetQuantity() int32 {
 		return x.Quantity
 	}
 	return 0
+}
+
+func (x *CreateOrderItem) GetUnitPrice() *Money {
+	if x != nil {
+		return x.UnitPrice
+	}
+	return nil
 }
 
 type GetOrderRequest struct {
@@ -604,11 +612,13 @@ const file_api_order_v1_order_proto_rawDesc = "" +
 	"\x05units\x18\x02 \x01(\x03R\x05units\x12\x14\n" +
 	"\x05nanos\x18\x03 \x01(\x05R\x05nanos\"E\n" +
 	"\x12CreateOrderRequest\x12/\n" +
-	"\x05items\x18\x01 \x03(\v2\x19.order.v1.CreateOrderItemR\x05items\"L\n" +
+	"\x05items\x18\x01 \x03(\v2\x19.order.v1.CreateOrderItemR\x05items\"|\n" +
 	"\x0fCreateOrderItem\x12\x1d\n" +
 	"\n" +
 	"product_id\x18\x01 \x01(\tR\tproductId\x12\x1a\n" +
-	"\bquantity\x18\x02 \x01(\x05R\bquantity\",\n" +
+	"\bquantity\x18\x02 \x01(\x05R\bquantity\x12.\n" +
+	"\n" +
+	"unit_price\x18\x03 \x01(\v2\x0f.order.v1.MoneyR\tunitPrice\",\n" +
 	"\x0fGetOrderRequest\x12\x19\n" +
 	"\border_id\x18\x01 \x01(\tR\aorderId\"O\n" +
 	"\x11ListOrdersRequest\x12\x1b\n" +
@@ -668,20 +678,21 @@ var file_api_order_v1_order_proto_depIdxs = []int32{
 	10, // 4: order.v1.Order.updated_at:type_name -> google.protobuf.Timestamp
 	3,  // 5: order.v1.OrderItem.unit_price:type_name -> order.v1.Money
 	5,  // 6: order.v1.CreateOrderRequest.items:type_name -> order.v1.CreateOrderItem
-	1,  // 7: order.v1.ListOrdersResponse.orders:type_name -> order.v1.Order
-	4,  // 8: order.v1.OrderService.CreateOrder:input_type -> order.v1.CreateOrderRequest
-	6,  // 9: order.v1.OrderService.GetOrder:input_type -> order.v1.GetOrderRequest
-	7,  // 10: order.v1.OrderService.ListOrders:input_type -> order.v1.ListOrdersRequest
-	9,  // 11: order.v1.OrderService.CancelOrder:input_type -> order.v1.CancelOrderRequest
-	1,  // 12: order.v1.OrderService.CreateOrder:output_type -> order.v1.Order
-	1,  // 13: order.v1.OrderService.GetOrder:output_type -> order.v1.Order
-	8,  // 14: order.v1.OrderService.ListOrders:output_type -> order.v1.ListOrdersResponse
-	1,  // 15: order.v1.OrderService.CancelOrder:output_type -> order.v1.Order
-	12, // [12:16] is the sub-list for method output_type
-	8,  // [8:12] is the sub-list for method input_type
-	8,  // [8:8] is the sub-list for extension type_name
-	8,  // [8:8] is the sub-list for extension extendee
-	0,  // [0:8] is the sub-list for field type_name
+	3,  // 7: order.v1.CreateOrderItem.unit_price:type_name -> order.v1.Money
+	1,  // 8: order.v1.ListOrdersResponse.orders:type_name -> order.v1.Order
+	4,  // 9: order.v1.OrderService.CreateOrder:input_type -> order.v1.CreateOrderRequest
+	6,  // 10: order.v1.OrderService.GetOrder:input_type -> order.v1.GetOrderRequest
+	7,  // 11: order.v1.OrderService.ListOrders:input_type -> order.v1.ListOrdersRequest
+	9,  // 12: order.v1.OrderService.CancelOrder:input_type -> order.v1.CancelOrderRequest
+	1,  // 13: order.v1.OrderService.CreateOrder:output_type -> order.v1.Order
+	1,  // 14: order.v1.OrderService.GetOrder:output_type -> order.v1.Order
+	8,  // 15: order.v1.OrderService.ListOrders:output_type -> order.v1.ListOrdersResponse
+	1,  // 16: order.v1.OrderService.CancelOrder:output_type -> order.v1.Order
+	13, // [13:17] is the sub-list for method output_type
+	9,  // [9:13] is the sub-list for method input_type
+	9,  // [9:9] is the sub-list for extension type_name
+	9,  // [9:9] is the sub-list for extension extendee
+	0,  // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_api_order_v1_order_proto_init() }
