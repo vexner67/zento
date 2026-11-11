@@ -93,12 +93,16 @@ formatters: # Форматтеры кода (проверка стиля)
   enable:
     - gofumpt  # Строгая версия gofmt с дополнительными правилами
     - gci      # Форматтер импортов (гибкая альтернатива goimports)
+  exclusions:
+    paths:
+      - '(^|/)mocks/'
   settings:
     gofumpt:
-      extra-rules: true  # Включить дополнительные строгие правила (например, удаление лишних пустых строк)
+      extra:
+        group-params: true  # Группировать параметры одного типа
     gci:
       sections: # Порядок группировки импортов
         - Standard  # Стандартная библиотека
         - Default   # Сторонние зависимости
-        - Prefix(github.com/olezhek28/golang-arch/)  # Локальные импорты проекта
+        - Prefix(github.com/vexner67/zento/)  # Локальные импорты проекта
       no-inline-comments: false  # Разрешить комментарии после импортов (true — запретит)
