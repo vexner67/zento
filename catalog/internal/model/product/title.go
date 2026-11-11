@@ -28,3 +28,7 @@ func NewTitle(value string) (Title, error) {
 
 	return Title(cleaned), nil
 }
+
+func (t Title) String() string {
+	return string(t)
+}
