@@ -12,6 +12,8 @@ var (
 
 	ErrNegativeQuantity = errors.New("quantity cannot be negative")
 
-	ErrInvalidProductStatus    = errors.New("invalid product status")
-	ErrInvalidStatusTransition = errors.New("invalid product status transition")
+	ErrInvalidProductStatus = errors.New("invalid product status")
+
+	ErrProductAlreadyExists = errors.New("product already exists")
+	ErrProductNotFound      = errors.New("product not found")
 )
