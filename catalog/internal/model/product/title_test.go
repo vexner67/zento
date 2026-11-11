@@ -30,9 +30,9 @@ func TestNewTitle(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
 
-			got, err := NewTitle(tc.value)
+			title, err := NewTitle(tc.value)
 			require.ErrorIs(t, err, tc.wantErr)
-			require.Equal(t, tc.want, got)
+			require.Equal(t, tc.want, title)
 		})
 	}
 }

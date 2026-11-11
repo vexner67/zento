@@ -30,9 +30,9 @@ func TestNewDescription(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
 
-			got, err := NewDescription(tc.value)
+			description, err := NewDescription(tc.value)
 			require.ErrorIs(t, err, tc.wantErr)
-			require.Equal(t, tc.want, got)
+			require.Equal(t, tc.want, description)
 		})
 	}
 }
