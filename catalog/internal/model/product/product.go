@@ -1,6 +1,7 @@
 package product
 
 import (
+	"slices"
 	"time"
 	"uuid"
 )
@@ -32,25 +33,29 @@ type Params struct {
 	Quantity    Quantity
 }
 
-func NewProduct(params Params) (*Product, error) {
+func NewProduct(params Params) (Product, error) {
 	status, err := NewStatus("draft")
 	if err != nil {
-		return nil, err
+		return Product{}, err
 	}
 
 	now := time.Now()
 
-	return &Product{
+	return Product{
 		id:          uuid.NewV7(),
 		sellerID:    params.SellerID,
 		categoryID:  params.CategoryID,
 		title:       params.Title,
 		description: params.Description,
-		imageIDs:    params.ImageIDs,
+		imageIDs:    slices.Clone(params.ImageIDs),
 		price:       params.Price,
 		quantity:    params.Quantity,
 		status:      status,
 		updatedAt:   now,
 		createdAt:   now,
 	}, nil
+}
+
+func (p *Product) ID() uuid.UUID {
+	return p.id
 }
